@@ -22,7 +22,7 @@
     <div class="container">
         <div class="row mb-2">
             <div class="col">
-                <div id="mapid" style="width: 100%; height: 500px;"></div>
+                <div id="mapid" style="width: 100%; height: 400px;"></div>
             </div>
         </div>
         <div class="row mt-1">
@@ -38,6 +38,34 @@
         <div class="row mt-2">
             <div class="col">
                 <a href="https://www.mapbox.com/">Documentation MapBox</a>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <label for="">Jarak yang ditempuh</label>
+                    </div>
+                    <div class="col">
+                        <div id="jarak"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="">Waktu yang dibutuhkan</label>
+                    </div>
+                    <div class="col">
+                        <div id="waktu"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="">Ongkos Kirim</label>
+                    </div>
+                    <div class="col">
+                        <div id="biaya"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -64,13 +92,13 @@
 
     <script>
         var map = L.map('mapid').setView([-7.746970, 110.355514], 13);
-        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicjRuZ2dhd2lzbnUiLCJhIjoiY2tvd21yc2t2MDF2eTJvcjl2ZzV1dWFyMiJ9.eZSjg8AbUMAFUulHuGxTqw', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
             maxZoom: 18,
             id: 'mapbox/streets-v11',
             tileSize: 512,
             zoomOffset: -1,
-            accessToken: 'your.mapbox.access.token'
+            accessToken: 'pk.eyJ1IjoicjRuZ2dhd2lzbnUiLCJhIjoiY2tvd21yc2t2MDF2eTJvcjl2ZzV1dWFyMiJ9.eZSjg8AbUMAFUulHuGxTqw'
         }).addTo(map);
         var marker = L.marker([-7.746970, 110.355514]).addTo(map);
         marker.bindPopup("<b>Posisi anda!</b><br>berada disini.").openPopup();
@@ -86,12 +114,19 @@
             var summary = routes[0].summary;
             var totaljarak = summary.totalDistance / 1000;
             var cost = (summary.totalDistance / 1000) * 500;
+            var hours = Math.floor((summary.totalTime % (60 * 60 * 24)) / (60 * 60));
+            var minutes = Math.round((summary.totalTime % (60 * 60)) / (60));
+
             // alert time and distance in km and minutes
             // alert('Total jarak ' + summary.totalDistance / 1000 + ' km, dan waktu tempuh ' + Math.round(summary.totalTime % 3600 / 60) + ' menit');
             // document.getElementById("cost_estimation").value = "Rp " + cost;
             var info = 'Total jarak ' + totaljarak.toFixed(2) + ' km, dan waktu tempuh ' + Math.round(summary.totalTime % 3600 / 60) + ' menit <br> Ongkos Kirim Rp ' + cost.toFixed(0);
             $("#exampleModal").modal("show");
             document.getElementById("information").innerHTML = info;
+            document.getElementById("jarak").innerHTML = totaljarak.toFixed(2) + ' km';
+            document.getElementById("waktu").innerHTML = hours + " hours : " +
+                minutes + " minutes";
+            document.getElementById("biaya").innerHTML = 'Rp. ' + cost.toFixed(0);
         });
     </script>
 
